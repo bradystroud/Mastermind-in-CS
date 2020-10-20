@@ -4,24 +4,31 @@ using System.Linq;
 namespace MasterMind {
   class Program {
     static void Main() {
-      Console.WriteLine("running...");
+      Console.WriteLine("Welcome to MasterMind. It's like the board game just with numbers instead of colours.");
       Program program = new Program();
       program.Game();
     }
     public void Game() {
 
       int[] secretList = GenerateSecretList();
+
+      Console.WriteLine("Enter your guess below.");
       int[] guess = Console.ReadLine().ToCharArray().Select(c => int.Parse(c.ToString())).ToArray();
 
       while ( !checkIfEqual(secretList, guess) ) { //If its not equal, keep doing this.
-        Console.WriteLine("Is not equal");
-        guess = Console.ReadLine().ToCharArray().Select(c => int.Parse(c.ToString())).ToArray();
 
-        foreach ( var item in giveFeedback(guess, secretList) ) {
-          Console.WriteLine(item);
+        Console.WriteLine("Enter your guess below.");
+        guess = Console.ReadLine().ToCharArray().Select(c => int.Parse(c.ToString())).ToArray();
+        Console.WriteLine("Here is the feedback for that guess:");
+        foreach ( int feedback in giveFeedback(guess, secretList) ) {
+          if(feedback == 1) {
+            Console.WriteLine("   One of the numbers is correct, but in the wrong place.");
+          } else if(feedback == 2){
+            Console.WriteLine("   One of the numbers is correct and in the right place");
+          }
         }
       }
-
+      Console.WriteLine("Congratulations! you guessed the secret list!");
     }
     static int[] GenerateSecretList() {
       Random random = new Random();
@@ -50,11 +57,10 @@ namespace MasterMind {
           if ( secret[position] == guess[subPosition] ) {
             if ( position == subPosition ) {
               feedback[position] = 2;
-              break; //end this iteration and move on
+              break;
             } else {
               feedback[position] = 1;
             }
-            // break;
           }
         }
       }
